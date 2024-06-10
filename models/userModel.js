@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique:true,
+    unique: true,
   },
   password: {
     type: String,
@@ -14,4 +14,25 @@ const userSchema = new mongoose.Schema({
 
 let User = mongoose.model("user", userSchema);
 
-export { User };
+class UserBuilder {
+  constructor() {
+    this.user = {};
+  }
+
+  setUsername(username) {
+    this.user.username = username;
+    return this;
+  }
+
+  setPassword(password) {
+    this.user.password = password;
+    return this;
+  }
+
+  async build() {
+    const user = new User(this.user);
+    return user;
+  }
+}
+
+export { User, UserBuilder };

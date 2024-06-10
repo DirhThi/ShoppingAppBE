@@ -30,3 +30,46 @@ const cartItemSchema = new mongoose.Schema({
 let cartItem = mongoose.model("cartItem", cartItemSchema);
 
 export { cartItem };
+
+class CartItemBuilder {
+  constructor() {
+    this.cartItem = {};
+  }
+
+  setUser(user) {
+    this.cartItem.user = user;
+    return this;
+  }
+
+  setProduct(product) {
+    this.cartItem.product = product;
+    return this;
+  }
+
+  setQuantity(quantity) {
+    this.cartItem.quantity = quantity;
+    return this;
+  }
+
+  setIsSelected(isSelected) {
+    this.cartItem.isSelected = isSelected;
+    return this;
+  }
+
+  setIsActived(isActived) {
+    this.cartItem.isActived = isActived;
+    return this;
+  }
+
+  setDateUpdate(dateUpdate) {
+    this.cartItem.dateUpdate = dateUpdate;
+    return this;
+  }
+
+  async build() {
+    const CartItem = new cartItem(this.cartItem);
+    return CartItem;
+  }
+}
+
+export { CartItemBuilder };

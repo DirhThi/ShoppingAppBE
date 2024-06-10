@@ -1,5 +1,4 @@
-import { User } from "../models/userModel.js";
-import { connectToDB, disconnectFromDB } from "../config/connectDB.js";
+import { User, UserBuilder } from "../models/userModel.js";
 import ResError from "../utils/ResError.js";
 
 const authController = {
@@ -13,7 +12,11 @@ const authController = {
         throw new ResError(401, "Email already exists");
       }
       // Create a new user
-      const newUser = new User({ username, password });
+      const newUser = await new UserBuilder()
+        .setUsername(username)
+        .setPassword(password)
+        .build();
+
       await newUser.save();
       const resUser = newUser.toObject();
       delete resUser.password;

@@ -1,10 +1,9 @@
-import { Product } from "../models/productModel.js";
+import instance from "../config/connectDB.js";
+import Database from "../config/connectDB.js";
+import { Product, ProductBuilder } from "../models/productModel.js";
 import { User } from "../models/userModel.js";
-import { connectToDB, disconnectFromDB } from "../config/connectDB.js";
-import { cartItem } from "../models/cartItemsModel.js";
-import axios from "axios";
-import { query } from "express";
 import diacritics from "diacritics";
+
 const productController = {
   //[POST] /api/product
   addNewProduct: async (req, res, next) => {
@@ -28,17 +27,30 @@ const productController = {
         return res.status(404).json({ message: "user not found" });
       }
 
-      const newProduct = new Product({
-        productName,
-        price,
-        viewed,
-        sold,
-        description,
-        dateCreate,
-        user,
-        images,
-        avgRating,
-      });
+      // const newProduct = new Product({
+      //   productName,
+      //   price,
+      //   viewed,
+      //   sold,
+      //   description,
+      //   dateCreate,
+      //   user,
+      //   images,
+      //   avgRating,
+      // });
+
+      const newProduct = await new ProductBuilder()
+      .setProductName(productName)
+      .setPrice(price)
+      .setViewed(viewed)
+      .setSold(sold)
+      .setDescription(description)
+      .setDateCreate(dateCreate)
+      .setUser(user)
+      .setImages(images)
+      .setAvgRating(avgRating)
+      .build();
+
       const savedNewProduct = await newProduct.save();
       res.status(200).json(savedNewProduct);
       //      disconnectFromDB();
@@ -108,7 +120,7 @@ const productController = {
   //[GET] /api/product?sorting=&skip=&limit=
   getProductSorting: async (req, res, next) => {
     try {
-      //connectToDB();
+      await instance.connect();
       const { sorting, limit, skip } = req.query;
       const sortQuery = {};
       if (sorting) {

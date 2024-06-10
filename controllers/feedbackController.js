@@ -1,5 +1,5 @@
 import { Order } from "../models/orderModel.js";
-import { Feedback } from "../models/feedbackModel.js";
+import { Feedback, FeedbackBuilder } from "../models/feedbackModel.js";
 import { User } from "../models/userModel.js";
 import { Product } from "../models/productModel.js";
 import mongoose from "mongoose";
@@ -28,12 +28,16 @@ const feedbackController = {
         const description = data[i].description;
         const dateCreate = new Date();
         const user = orderExists.user;
-        const newFeedback = new Feedback({
-          dateCreate,
-          rating,
-          description,
-          user,
-        });
+
+        
+
+        const newFeedback = await new FeedbackBuilder()
+          .setDateCreate(dateCreate)
+          .setUser(user)
+          .setDescription(description)
+          .setRating(rating)
+          .build();
+          
         const savedFeedback = await newFeedback.save();
 
         const product = await Product.findById(
@@ -79,7 +83,7 @@ const feedbackController = {
       .populate({
         path: "feedbacks",
         options: {
-          sort: { "dateCreate": -1 },
+          sort: { dateCreate: -1 },
           skip: parseInt(skip),
           limit: parseInt(limit),
         },

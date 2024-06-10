@@ -11,9 +11,12 @@ import { cartItemRouter } from "./routes/index.js";
 import { orderItemRouter } from "./routes/index.js";
 import { feedbackItemRouter } from "./routes/index.js";
 import { searchContentRouter } from "./routes/index.js";
-import { connectToDB } from "./config/connectDB.js";
+import instance from "./config/connectDB.js";
+
 dotenv.config();
-connectToDB();
+
+await instance.connect();
+
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(helmet());
 app.use(cors());

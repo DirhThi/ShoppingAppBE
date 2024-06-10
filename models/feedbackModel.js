@@ -22,3 +22,36 @@ const feedbackSchema = new mongoose.Schema({
 let Feedback = mongoose.model("feedback", feedbackSchema);
 
 export { Feedback };
+
+class FeedbackBuilder {
+  constructor() {
+    this.feedback = {};
+  }
+
+  setDateCreate(dateCreate) {
+    this.feedback.dateCreate = dateCreate;
+    return this;
+  }
+
+  setUser(user) {
+    this.feedback.user = user;
+    return this;
+  }
+
+  setDescription(description) {
+    this.feedback.description = description;
+    return this;
+  }
+
+  setRating(rating) {
+    this.feedback.rating = rating;
+    return this;
+  }
+
+  async build() {
+    const feedback = new Feedback(this.feedback);
+    return feedback;
+  }
+}
+
+export { FeedbackBuilder };

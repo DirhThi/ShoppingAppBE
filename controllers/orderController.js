@@ -1,4 +1,4 @@
-import { Order } from "../models/orderModel.js";
+import { Order, OrderBuilder } from "../models/orderModel.js";
 import { cartItem } from "../models/cartItemsModel.js";
 import { Product } from "../models/productModel.js";
 import { User } from "../models/userModel.js";
@@ -44,13 +44,15 @@ const orderController = {
         const dateCreate = new Date();
         const isFeedback = false;
         const cartItems = [...cartItemId];
-        const newOrder = new Order({
-          dateCreate,
-          user,
-          cartItems,
-          isFeedback,
-          total,
-        });
+
+        const newOrder = await new OrderBuilder()
+          .setDateCreate(dateCreate)
+          .setUser(user)
+          .setCartItems(cartItems)
+          .setIsFeedback(isFeedback)
+          .setTotal(total)
+          .build();
+
         const savedOrder = await newOrder.save();
         res.status(200).json(savedOrder);
       });
