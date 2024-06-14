@@ -1,4 +1,7 @@
-import { CartItemBuilder, cartItem } from "../models/cartItemsModel.js";
+import {
+  CartItemBuilder,
+  CartItem as cartItem,
+} from "../models/cartItemsModel.js";
 import { User } from "../models/userModel.js";
 import { Product } from "../models/productModel.js";
 import { Order } from "../models/orderModel.js";
@@ -44,15 +47,14 @@ const cartItemController = {
         );
         res.status(200).json({ updated: true });
       } else {
-      
-        const newCartItem = new CartItemBuilder()
+        const newCartItem =await new CartItemBuilder()
           .setUser(user)
           .setProduct(product)
           .setQuantity(quantity)
           .setIsSelected(isSelected)
           .setDateUpdate(dateUpdate)
           .build();
-
+        console.log(newCartItem);
         await newCartItem.save();
         res.status(200).json({ updated: false });
       }

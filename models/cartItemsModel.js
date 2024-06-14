@@ -27,9 +27,9 @@ const cartItemSchema = new mongoose.Schema({
   },
 });
 
-let cartItem = mongoose.model("cartItem", cartItemSchema);
+let CartItem = mongoose.model("cartItem", cartItemSchema);
 
-export { cartItem };
+export { CartItem };
 
 class CartItemBuilder {
   constructor() {
@@ -67,8 +67,8 @@ class CartItemBuilder {
   }
 
   async build() {
-    const CartItem = new cartItem(this.cartItem);
-    return CartItem;
+    const cartItem = new CartItem(this.cartItem);
+    return cartItem;
   }
 }
 

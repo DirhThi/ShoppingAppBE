@@ -1,5 +1,5 @@
 import { Order, OrderBuilder } from "../models/orderModel.js";
-import { cartItem } from "../models/cartItemsModel.js";
+import   {CartItem as cartItem}  from "../models/cartItemsModel.js";
 import { Product } from "../models/productModel.js";
 import { User } from "../models/userModel.js";
 const orderController = {

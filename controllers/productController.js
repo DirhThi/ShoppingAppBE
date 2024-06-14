@@ -40,17 +40,17 @@ const productController = {
       // });
 
       const newProduct = await new ProductBuilder()
-      .setProductName(productName)
-      .setPrice(price)
-      .setViewed(viewed)
-      .setSold(sold)
-      .setDescription(description)
-      .setDateCreate(dateCreate)
-      .setUser(user)
-      .setImages(images)
-      .setAvgRating(avgRating)
-      .build();
-
+        .setProductName(productName)
+        .setPrice(price)
+        .setViewed(viewed)
+        .setSold(sold)
+        .setDescription(description)
+        .setDateCreate(dateCreate)
+        .setUser(user)
+        .setImages(images)
+        .setAvgRating(avgRating)
+        .build();
+      console.log(newProduct);
       const savedNewProduct = await newProduct.save();
       res.status(200).json(savedNewProduct);
       //      disconnectFromDB();
