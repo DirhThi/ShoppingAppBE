@@ -8,8 +8,21 @@ services:
     ports:
       - 6379:6379
     networks:
-      - instalite
+      - shopping-app
+  
+  app: 
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    tty: true
+    depends_on:
+      - redis
+    networks:
+      - shopping-app
     
 networks:
-  instalite:
+  shopping-app:
     driver: bridge
+
