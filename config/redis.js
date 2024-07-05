@@ -4,7 +4,7 @@ let client;
 function connectToClient() {
   if (!client) {
     client = new Redis({
-      host: 'localhost',
+      host: 'redis',
       port: 6379
     });
   }
