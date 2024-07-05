@@ -12,7 +12,6 @@ import { orderItemRouter } from "./routes/index.js";
 import { feedbackItemRouter } from "./routes/index.js";
 import { searchContentRouter } from "./routes/index.js";
 import instance from "./config/connectDB.js";
-
 dotenv.config();
 
 await instance.connect();

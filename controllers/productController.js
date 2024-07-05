@@ -1,9 +1,9 @@
-import instance from "../config/connectDB.js";
-import Database from "../config/connectDB.js";
+import { connectToClient } from "../config/redis.js";
 import { Product, ProductBuilder } from "../models/productModel.js";
 import { User } from "../models/userModel.js";
 import diacritics from "diacritics";
 
+const redis = connectToClient();
 const productController = {
   //[POST] /api/product
   addNewProduct: async (req, res, next) => {
@@ -120,7 +120,7 @@ const productController = {
   //[GET] /api/product?sorting=&skip=&limit=
   getProductSorting: async (req, res, next) => {
     try {
-      await instance.connect();
+      // await instance.connect();
       const { sorting, limit, skip } = req.query;
       const sortQuery = {};
       if (sorting) {
@@ -131,6 +131,20 @@ const productController = {
         }
         sortQuery["_id"] = 1;
       }
+
+      // Check if products are in cache
+      const cacheKey = `products_${sorting}_${limit}_${skip}`;
+
+      // Check if products are in cache
+      const cachedProducts = await redis.get(cacheKey);
+      if (cachedProducts) {
+        const data = JSON.parse(cachedProducts);
+        return res.status(200).json({
+          totalProduct: data.length,
+          data
+        });
+      }
+
       const product = await Product.find({ isDeleted: false })
         .sort(sortQuery)
         .skip(skip)
@@ -138,10 +152,15 @@ const productController = {
         .select("-feedbacks")
         .select("-searchIdea")
         .populate({ path: "user", select: "username" });
-      if (!product) {
+      
+      if (!product) 
         return res.status(404).json({ message: "product not exist" });
-      }
+
       const totalProduct = await Product.countDocuments({ isDeleted: false });
+
+      // Cache the response
+      await redis.set(cacheKey, JSON.stringify(product));
+      
       res.status(200).json({ totalProduct: totalProduct, data: product });
       //disconnectFromDB();
     } catch (error) {

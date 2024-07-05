@@ -1,0 +1,15 @@
+services:
+  redis:
+    image: redis:7.2.4
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - instalite
+    
+networks:
+  instalite:
+    driver: bridge
